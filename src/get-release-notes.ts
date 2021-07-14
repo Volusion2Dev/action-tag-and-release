@@ -1,6 +1,10 @@
 import {gitCommand} from './utils'
 
-export async function getReleaseNotes({prevRelease}) {
+interface Options {
+  prevRelease: string | undefined
+}
+
+export async function getReleaseNotes({prevRelease}: Options): Promise<string> {
   const command = `git --no-pager shortlog --no-merges ${
     prevRelease ? `${prevRelease}..` : 'HEAD'
   }`

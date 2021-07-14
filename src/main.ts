@@ -13,13 +13,22 @@ async function run(): Promise<void> {
     core.debug(`repository: ${repository}`)
     core.debug(`environment: ${releaseName}`)
 
+    if (!repository) {
+      throw new Error('`repository` is required')
+    }
+    if (!releaseName) {
+      throw new Error('`release_name` is required')
+    }
+
     const releaseNames = await getReleaseNames({
       githubToken,
       repository,
       environment
     })
 
-    const changelog = await getReleaseNotes(releaseNames)
+    const changelog = await getReleaseNotes({
+      prevRelease: releaseNames.prevRelease
+    })
     await tagAndRelease({
       githubToken,
       changelog,

@@ -1,6 +1,15 @@
 import github from '@actions/github'
 import {gitCommand} from './utils'
 
+interface Options {
+  githubToken: string
+  repository: string
+  tagName: string
+  releaseDescription: string | undefined
+  changelog: string
+  releaseName: string
+}
+
 export async function tagAndRelease({
   githubToken,
   repository,
@@ -8,7 +17,7 @@ export async function tagAndRelease({
   releaseDescription,
   changelog,
   releaseName
-}) {
+}: Options): Promise<void> {
   const octokit = github.getOctokit(githubToken)
   const [owner, repoName] = repository.split('/')
   let body = `\`\`\`\n${changelog}\n\`\`\``

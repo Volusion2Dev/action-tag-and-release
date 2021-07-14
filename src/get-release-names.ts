@@ -1,7 +1,22 @@
 import github from '@actions/github'
 import {format} from 'date-fns'
 
-export async function getReleaseNames({githubToken, repository, environment}) {
+interface Options {
+  githubToken: string
+  repository: string
+  environment: string
+}
+
+interface Result {
+  prevRelease: string | undefined
+  nextRelease: string
+}
+
+export async function getReleaseNames({
+  githubToken,
+  repository,
+  environment
+}: Options): Promise<Result> {
   const [repoOwner, repoName] = repository.split('/')
 
   const octokit = github.getOctokit(githubToken)
