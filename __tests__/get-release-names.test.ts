@@ -58,3 +58,63 @@ it('makes a brand new release name', async () => {
     nextRelease: 'sandbox-20210715-01'
   })
 })
+
+it('increments release numbers when a previous release is found', async () => {
+  setupReleaseList(['sandbox-20210715-02', 'sandbox-20210715-01'])
+
+  const result = await getReleaseNames({
+    githubToken: 'GITHUB_TOKEN',
+    repository: 'my/repo',
+    environment: 'sandbox',
+    currentDate: new Date('2021-07-15T15:13:04.754Z')
+  })
+  expect(result).toEqual({
+    prevRelease: 'sandbox-20210715-02',
+    nextRelease: 'sandbox-20210715-03'
+  })
+})
+
+it("doesn't increment if the previous release is from another day", async () => {
+  setupReleaseList(['sandbox-20210714-01'])
+
+  const result = await getReleaseNames({
+    githubToken: 'GITHUB_TOKEN',
+    repository: 'my/repo',
+    environment: 'sandbox',
+    currentDate: new Date('2021-07-15T15:13:04.754Z')
+  })
+  expect(result).toEqual({
+    prevRelease: 'sandbox-20210714-01',
+    nextRelease: 'sandbox-20210715-01'
+  })
+})
+
+it("doesn't increment if the previous release is from another environment", async () => {
+  setupReleaseList(['sandbox-20210715-01'])
+
+  const result = await getReleaseNames({
+    githubToken: 'GITHUB_TOKEN',
+    repository: 'my/repo',
+    environment: 'prod',
+    currentDate: new Date('2021-07-15T15:13:04.754Z')
+  })
+  expect(result).toEqual({
+    prevRelease: undefined,
+    nextRelease: 'prod-20210715-01'
+  })
+})
+
+it('passes values through the API', async () => {
+  const listReleases = setupReleaseList([])
+  await getReleaseNames({
+    githubToken: 'GITHUB_TOKEN',
+    repository: 'my/repo',
+    environment: 'sandbox',
+    currentDate: new Date('2021-07-15T15:13:04.754Z')
+  })
+  expect(github.getOctokit as jest.Mock).toHaveBeenCalledWith('GITHUB_TOKEN')
+  expect(listReleases).toHaveBeenCalledWith({
+    owner: 'my',
+    repo: 'repo'
+  })
+})
