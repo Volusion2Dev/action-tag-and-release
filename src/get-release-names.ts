@@ -5,6 +5,7 @@ interface Options {
   githubToken: string
   repository: string
   environment: string
+  currentDate?: Date
 }
 
 interface Result {
@@ -15,13 +16,14 @@ interface Result {
 export async function getReleaseNames({
   githubToken,
   repository,
-  environment
+  environment,
+  currentDate = new Date()
 }: Options): Promise<Result> {
   const [repoOwner, repoName] = repository.split('/')
 
   const octokit = github.getOctokit(githubToken)
 
-  const dateString = format(new Date(), 'yyyyMMdd')
+  const dateString = format(currentDate, 'yyyyMMdd')
 
   const releases = (
     await octokit.rest.repos.listReleases({
