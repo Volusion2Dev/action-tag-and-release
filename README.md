@@ -4,7 +4,14 @@
 
 # Usage
 
-TODO
+```yaml
+- uses: Volusion2Dev/action-tag-and-release@v1
+  with:
+    github_token: ${{ github.token }}
+    environment: sandbox
+    release_name: '[Release] - Sandbox'
+    release_description: 'Optional description'
+```
 
 # Development
 
