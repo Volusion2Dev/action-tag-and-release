@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
-  "version": "0.0.0",
+  "name": "volusion-tag-and-release",
+  "version": "1.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Creates a GitHub release with a date-based name and a list of commits since the previous release",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
