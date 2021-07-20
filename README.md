@@ -13,6 +13,24 @@
     release_description: 'Optional description'
 ```
 
+## Inputs
+
+### github_token
+
+Token for accessing the repository. Should just be `${{ github.token }}` most of the time!
+
+### environment
+
+The environment of the release; will be used as a prefix to the tag name. Ex. if you provide `sandbox`, a tag might be `sandbox-20210720-01`.
+
+### release_name
+
+The name of the release in GitHub.
+
+### release_description
+
+A line to put at the beginning of the release notes.
+
 # Development
 
 This is based on the [Typescript Action template](https://github.com/actions/typescript-action)
