@@ -1,16 +1,44 @@
-import * as core from '@actions/core'
-import {wait} from './wait'
+import core from '@actions/core'
+import {getReleaseNames} from './get-release-names'
+import {getReleaseNotes} from './get-release-notes'
+import {tagAndRelease} from './tag-and-release'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    const repository = process.env.GITHUB_REPOSITORY
+    const githubToken = core.getInput('github_token')
+    const environment = core.getInput('environment')
+    const releaseName = core.getInput('release_name')
+    const releaseDescription = core.getInput('release_description')
+    core.debug(`repository: ${repository}`)
+    core.debug(`environment: ${releaseName}`)
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    if (!repository) {
+      throw new Error('`repository` is required')
+    }
+    if (!releaseName) {
+      throw new Error('`release_name` is required')
+    }
 
-    core.setOutput('time', new Date().toTimeString())
+    const releaseNames = await getReleaseNames({
+      githubToken,
+      repository,
+      environment
+    })
+
+    const changelog = await getReleaseNotes({
+      prevRelease: releaseNames.prevRelease
+    })
+    await tagAndRelease({
+      githubToken,
+      changelog,
+      releaseDescription,
+      repository,
+      releaseName,
+      tagName: releaseNames.nextRelease
+    })
+
+    core.setOutput('release_name', releaseNames.nextRelease)
   } catch (error) {
     core.setFailed(error.message)
   }

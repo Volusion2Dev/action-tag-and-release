@@ -1,11 +1,23 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Create Release'
+description: 'Creates a GitHub release with a date-based name and a list of commits since the previous release'
 inputs:
-  milliseconds: # change this
+  github_token:
+    description: 'Token for accessing the repository'
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  environment:
+    description: 'The environment of the release; will be used as a prefix.'
+    required: true
+    default: 'sandbox'
+  release_name:
+    description: 'The name of the release that will be created'
+    required: true
+    default: '[Release] see notes'
+  release_description:
+    description: 'A line to put at the beginning of the release notes'
+    required: false
+outputs:
+  release_name:
+    description: 'The tagname of the new release'
 runs:
   using: 'node12'
-  main: 'dist/index.js'
+  main: 'index.js'
