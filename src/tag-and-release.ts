@@ -1,4 +1,4 @@
-import * as github from '@actions/github'
+import github from '@actions/github'
 import {gitCommand} from './utils'
 
 interface Options {

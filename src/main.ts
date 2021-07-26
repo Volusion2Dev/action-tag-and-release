@@ -40,7 +40,7 @@ async function run(): Promise<void> {
 
     core.setOutput('release_name', releaseNames.nextRelease)
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed(error)
   }
 }
 

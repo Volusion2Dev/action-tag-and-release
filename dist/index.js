@@ -157,7 +157,7 @@ function run() {
             core.setOutput('release_name', releaseNames.nextRelease);
         }
         catch (error) {
-            core.setFailed(error.message);
+            core.setFailed(error);
         }
     });
 }
