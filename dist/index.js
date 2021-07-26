@@ -7,6 +7,25 @@ require('./sourcemap-register.js');module.exports =
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -16,17 +35,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReleaseNames = void 0;
-const github_1 = __importDefault(__webpack_require__(5438));
+const github = __importStar(__webpack_require__(5438));
 const date_fns_1 = __webpack_require__(3314);
 function getReleaseNames({ githubToken, repository, environment, currentDate = new Date() }) {
     return __awaiter(this, void 0, void 0, function* () {
         const [repoOwner, repoName] = repository.split('/');
-        const octokit = github_1.default.getOctokit(githubToken);
+        const octokit = github.getOctokit(githubToken);
         const dateString = date_fns_1.format(currentDate, 'yyyyMMdd');
         const releases = (yield octokit.rest.repos.listReleases({
             owner: repoOwner,
@@ -123,6 +139,7 @@ const get_release_names_1 = __webpack_require__(8685);
 const get_release_notes_1 = __webpack_require__(3698);
 const tag_and_release_1 = __webpack_require__(2577);
 function run() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const repository = process.env.GITHUB_REPOSITORY;
@@ -157,7 +174,8 @@ function run() {
             core.setOutput('release_name', releaseNames.nextRelease);
         }
         catch (error) {
-            core.setFailed(error);
+            core.error((_a = error.stack) !== null && _a !== void 0 ? _a : '');
+            core.setFailed(error.message);
         }
     });
 }
@@ -171,6 +189,25 @@ run();
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -180,16 +217,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.tagAndRelease = void 0;
-const github_1 = __importDefault(__webpack_require__(5438));
+const github = __importStar(__webpack_require__(5438));
 const utils_1 = __webpack_require__(918);
 function tagAndRelease({ githubToken, repository, tagName, releaseDescription, changelog, releaseName }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokit = github_1.default.getOctokit(githubToken);
+        const octokit = github.getOctokit(githubToken);
         const [owner, repoName] = repository.split('/');
         let body = `\`\`\`\n${changelog}\n\`\`\``;
         if (releaseDescription) {
