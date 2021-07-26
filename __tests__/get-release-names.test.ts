@@ -1,11 +1,9 @@
 import {getReleaseNames} from '../src/get-release-names'
-import github from '@actions/github'
+import * as github from '@actions/github'
 
 jest.mock('@actions/github', () => ({
   __esModule: true,
-  default: {
-    getOctokit: jest.fn()
-  }
+  getOctokit: jest.fn()
 }))
 
 type Octokit = ReturnType<typeof github['getOctokit']>
