@@ -1,4 +1,4 @@
-import core from '@actions/core'
+import * as core from '@actions/core'
 import {getReleaseNames} from './get-release-names'
 import {getReleaseNotes} from './get-release-notes'
 import {tagAndRelease} from './tag-and-release'

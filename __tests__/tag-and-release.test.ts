@@ -1,4 +1,4 @@
-import github from '@actions/github'
+import * as github from '@actions/github'
 import {gitCommand} from '../src/utils'
 import {tagAndRelease} from '../src/tag-and-release'
 
@@ -6,9 +6,7 @@ jest.mock('../src/utils')
 
 jest.mock('@actions/github', () => ({
   __esModule: true,
-  default: {
-    getOctokit: jest.fn()
-  }
+  getOctokit: jest.fn()
 }))
 
 function setupCreateRelease(): jest.Mock {
