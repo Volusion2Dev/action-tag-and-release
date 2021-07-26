@@ -89,6 +89,25 @@ exports.getReleaseNotes = getReleaseNotes;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -98,11 +117,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __importDefault(__webpack_require__(2186));
+const core = __importStar(__webpack_require__(2186));
 const get_release_names_1 = __webpack_require__(8685);
 const get_release_notes_1 = __webpack_require__(3698);
 const tag_and_release_1 = __webpack_require__(2577);
@@ -110,12 +126,12 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const repository = process.env.GITHUB_REPOSITORY;
-            const githubToken = core_1.default.getInput('github_token');
-            const environment = core_1.default.getInput('environment');
-            const releaseName = core_1.default.getInput('release_name');
-            const releaseDescription = core_1.default.getInput('release_description');
-            core_1.default.debug(`repository: ${repository}`);
-            core_1.default.debug(`environment: ${releaseName}`);
+            const githubToken = core.getInput('github_token');
+            const environment = core.getInput('environment');
+            const releaseName = core.getInput('release_name');
+            const releaseDescription = core.getInput('release_description');
+            core.debug(`repository: ${repository}`);
+            core.debug(`environment: ${releaseName}`);
             if (!repository) {
                 throw new Error('`repository` is required');
             }
@@ -138,10 +154,10 @@ function run() {
                 releaseName,
                 tagName: releaseNames.nextRelease
             });
-            core_1.default.setOutput('release_name', releaseNames.nextRelease);
+            core.setOutput('release_name', releaseNames.nextRelease);
         }
         catch (error) {
-            core_1.default.setFailed(error.message);
+            core.setFailed(error.message);
         }
     });
 }
