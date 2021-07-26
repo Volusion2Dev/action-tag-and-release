@@ -139,7 +139,6 @@ const get_release_names_1 = __webpack_require__(8685);
 const get_release_notes_1 = __webpack_require__(3698);
 const tag_and_release_1 = __webpack_require__(2577);
 function run() {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const repository = process.env.GITHUB_REPOSITORY;
@@ -174,7 +173,6 @@ function run() {
             core.setOutput('release_name', releaseNames.nextRelease);
         }
         catch (error) {
-            core.error((_a = error.stack) !== null && _a !== void 0 ? _a : '');
             core.setFailed(error.message);
         }
     });
