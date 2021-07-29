@@ -5,6 +5,12 @@
 # Usage
 
 ```yaml
+- uses: actions/checkout@v2
+  with:
+    fetch-depth: 0 # this is necessary to get a list of commits
+
+# ...
+
 - uses: Volusion2Dev/action-tag-and-release@v1
   with:
     github_token: ${{ github.token }}
