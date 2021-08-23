@@ -22,7 +22,7 @@ export async function tagAndRelease({
   const [owner, repoName] = repository.split('/')
   let body = changelog
   if (releaseDescription) {
-    body = `${releaseDescription}\n${body}`
+    body = `${releaseDescription}\n\n${body}`
   }
   const commit = (await gitCommand('git rev-parse HEAD')).trim()
   await octokit.rest.repos.createRelease({

@@ -242,7 +242,7 @@ function tagAndRelease({ githubToken, repository, tagName, releaseDescription, c
         const [owner, repoName] = repository.split('/');
         let body = changelog;
         if (releaseDescription) {
-            body = `${releaseDescription}\n${body}`;
+            body = `${releaseDescription}\n\n${body}`;
         }
         const commit = (yield utils_1.gitCommand('git rev-parse HEAD')).trim();
         yield octokit.rest.repos.createRelease({
