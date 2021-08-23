@@ -20,7 +20,7 @@ export async function tagAndRelease({
 }: Options): Promise<void> {
   const octokit = github.getOctokit(githubToken)
   const [owner, repoName] = repository.split('/')
-  let body = `\`\`\`\n${changelog}\n\`\`\``
+  let body = changelog
   if (releaseDescription) {
     body = `${releaseDescription}\n${body}`
   }
