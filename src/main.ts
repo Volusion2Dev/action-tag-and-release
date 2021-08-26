@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import {formatLogs} from './format-logs'
 import {getReleaseNames} from './get-release-names'
 import {getReleaseNotes} from './get-release-notes'
 import {tagAndRelease} from './tag-and-release'
@@ -29,9 +30,10 @@ async function run(): Promise<void> {
     const changelog = await getReleaseNotes({
       prevRelease: releaseNames.prevRelease
     })
+    const formattedChangelog = formatLogs(changelog)
     await tagAndRelease({
       githubToken,
-      changelog,
+      changelog: formattedChangelog,
       releaseDescription,
       repository,
       releaseName,

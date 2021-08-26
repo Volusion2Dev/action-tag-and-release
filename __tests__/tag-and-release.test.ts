@@ -45,10 +45,8 @@ it('should create a release', async () => {
   expect(createRelease.mock.calls[0]).toMatchInlineSnapshot(`
     Array [
       Object {
-        "body": "\`\`\`
-    * Commit 1
-    * Commit 2
-    \`\`\`",
+        "body": "* Commit 1
+    * Commit 2",
         "name": "[Release] - Sandbox",
         "owner": "my",
         "repo": "repo",
@@ -72,9 +70,8 @@ it('should add a description to release body', async () => {
   const {body} = createRelease.mock.calls[0][0]
   expect(body).toMatchInlineSnapshot(`
     "This is a test description
-    \`\`\`
+
     * Commit 1
-    * Commit 2
-    \`\`\`"
+    * Commit 2"
   `)
 })

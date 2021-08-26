@@ -2,6 +2,21 @@ require('./sourcemap-register.js');module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 7973:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.formatLogs = void 0;
+function formatLogs(input) {
+    return input.replace(/^ {6}/gm, '* ');
+}
+exports.formatLogs = formatLogs;
+
+
+/***/ }),
+
 /***/ 8685:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -135,6 +150,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(2186));
+const format_logs_1 = __webpack_require__(7973);
 const get_release_names_1 = __webpack_require__(8685);
 const get_release_notes_1 = __webpack_require__(3698);
 const tag_and_release_1 = __webpack_require__(2577);
@@ -162,9 +178,10 @@ function run() {
             const changelog = yield get_release_notes_1.getReleaseNotes({
                 prevRelease: releaseNames.prevRelease
             });
+            const formattedChangelog = format_logs_1.formatLogs(changelog);
             yield tag_and_release_1.tagAndRelease({
                 githubToken,
-                changelog,
+                changelog: formattedChangelog,
                 releaseDescription,
                 repository,
                 releaseName,
@@ -223,9 +240,9 @@ function tagAndRelease({ githubToken, repository, tagName, releaseDescription, c
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = github.getOctokit(githubToken);
         const [owner, repoName] = repository.split('/');
-        let body = `\`\`\`\n${changelog}\n\`\`\``;
+        let body = changelog;
         if (releaseDescription) {
-            body = `${releaseDescription}\n${body}`;
+            body = `${releaseDescription}\n\n${body}`;
         }
         const commit = (yield utils_1.gitCommand('git rev-parse HEAD')).trim();
         yield octokit.rest.repos.createRelease({
