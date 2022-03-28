@@ -9,11 +9,11 @@ interface Options {
 }
 
 interface Result {
-  prevRelease: string | undefined
-  nextRelease: string
+  prevTag: string | undefined
+  nextTag: string
 }
 
-export async function getReleaseNames({
+export async function getTagNames({
   githubToken,
   repository,
   environment,
@@ -25,33 +25,32 @@ export async function getReleaseNames({
 
   const dateString = format(currentDate, 'yyyyMMdd')
 
-  const releases = (
-    await octokit.rest.repos.listReleases({
+  const tags = (
+    await octokit.rest.repos.listTags({
       owner: repoOwner,
-      repo: repoName
+      repo: repoName,
+      per_page: 100
     })
   ).data
 
-  const prevReleaseObj = releases.find(x =>
-    x.tag_name.startsWith(`${environment}-`)
-  )
-  const prevRelease = prevReleaseObj && prevReleaseObj.tag_name
-  const lastReleaseMatch =
-    prevRelease && prevRelease.match(`^${environment}-${dateString}-([0-9]+)$`)
+  const prevTagObj = tags.find(x => x.name.startsWith(`${environment}-`))
+  const prevTagName = prevTagObj && prevTagObj.name
+  const lastTagMatch =
+    prevTagName && prevTagName.match(`^${environment}-${dateString}-([0-9]+)$`)
 
   // These names end with -01, -02, etc. to allow multiple releases in the same day
-  // If there was already a release today, compute the next number in sequence
+  // If there was already a release tag today, compute the next number in sequence
   let number = 1
-  if (lastReleaseMatch) {
-    number = parseInt(lastReleaseMatch[1], 10) + 1
+  if (lastTagMatch) {
+    number = parseInt(lastTagMatch[1], 10) + 1
   }
 
-  const nextRelease = `${environment}-${dateString}-${number
+  const nextTag = `${environment}-${dateString}-${number
     .toString()
     .padStart(2, '0')}`
 
   return {
-    prevRelease,
-    nextRelease
+    prevTag: prevTagName,
+    nextTag
   }
 }
