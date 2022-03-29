@@ -115,3 +115,22 @@ it('passes values through the API', async () => {
     })
   )
 })
+
+it('comes up with the correct tag name if tags come back from the API out of order', async () => {
+  setupTagList([
+    'sandbox-20210715-02',
+    'sandbox-20210715-03',
+    'sandbox-20210715-01'
+  ])
+
+  const result = await getTagNames({
+    githubToken: 'GITHUB_TOKEN',
+    repository: 'my/repo',
+    environment: 'sandbox',
+    currentDate: new Date('2021-07-15T15:13:04.754Z')
+  })
+  expect(result).toEqual({
+    prevTag: 'sandbox-20210715-03',
+    nextTag: 'sandbox-20210715-04'
+  })
+})
