@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import {formatLogs} from './format-logs'
-import {getTagNames} from './get-release-names'
+import {getTagNames} from './get-tag-names'
 import {getReleaseNotes} from './get-release-notes'
 import {tagAndRelease} from './tag-and-release'
 
