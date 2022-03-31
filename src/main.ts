@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import {formatLogs} from './format-logs'
-import {getReleaseNames} from './get-release-names'
+import {getTagNames} from './get-tag-names'
 import {getReleaseNotes} from './get-release-notes'
 import {tagAndRelease} from './tag-and-release'
 
@@ -21,14 +21,14 @@ async function run(): Promise<void> {
       throw new Error('`release_name` is required')
     }
 
-    const releaseNames = await getReleaseNames({
+    const tagNames = await getTagNames({
       githubToken,
       repository,
       environment
     })
 
     const changelog = await getReleaseNotes({
-      prevRelease: releaseNames.prevRelease
+      prevReleaseTag: tagNames.prevTag
     })
     const formattedChangelog = formatLogs(changelog)
     await tagAndRelease({
@@ -37,12 +37,16 @@ async function run(): Promise<void> {
       releaseDescription,
       repository,
       releaseName,
-      tagName: releaseNames.nextRelease
+      tagName: tagNames.nextTag
     })
 
-    core.setOutput('release_name', releaseNames.nextRelease)
+    core.setOutput('release_name', tagNames.nextTag)
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed(
+      error instanceof Error || typeof error === 'string'
+        ? error
+        : 'An unexpected error occurred'
+    )
   }
 }
 

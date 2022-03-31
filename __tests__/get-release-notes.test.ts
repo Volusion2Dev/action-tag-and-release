@@ -11,7 +11,7 @@ beforeEach(() => {
 it('gets the git diff', async () => {
   gitCommandMocked.mockResolvedValue('* Commit 1\n* Commit 2\n')
   const result = await getReleaseNotes({
-    prevRelease: 'sandbox-20210715-01'
+    prevReleaseTag: 'sandbox-20210715-01'
   })
   expect(gitCommandMocked).toHaveBeenCalledWith(
     'git --no-pager shortlog --no-merges sandbox-20210715-01..'
@@ -22,7 +22,7 @@ it('gets the git diff', async () => {
 it('gets every commit since the beginning', async () => {
   gitCommandMocked.mockResolvedValue('* Commit 1\n* Commit 2\n')
   const result = await getReleaseNotes({
-    prevRelease: undefined
+    prevReleaseTag: undefined
   })
   expect(gitCommandMocked).toHaveBeenCalledWith(
     'git --no-pager shortlog --no-merges HEAD'
