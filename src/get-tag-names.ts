@@ -31,26 +31,33 @@ export async function getTagNames({
 
   const currentDateString = format(currentDate, 'yyyyMMdd')
 
-  const tags = (
-    await octokit.rest.repos.listTags({
+  const tags = []
+  let pagesRemaining = true
+  let page = 0
+  while (pagesRemaining) {
+    const {data} = await octokit.rest.repos.listTags({
       owner: repoOwner,
       repo: repoName,
-      per_page: 100
+      per_page: 100,
+      page
     })
-  ).data
+    tags.push(...data)
+    page += 1
+    if (data.length < 100) {
+      pagesRemaining = false
+    }
+  }
 
   const relevantTags = tags
-    .filter(it => it.name.startsWith(`${environment}`))
-    .map(
-      (tag): TagData => {
-        const split = tag.name.split('-')
-        return {
-          name: tag.name,
-          dateString: split[1],
-          number: parseInt(split[2])
-        }
+    .filter(it => it.name.startsWith(`${environment}-`))
+    .map((tag): TagData => {
+      const split = tag.name.split('-')
+      return {
+        name: tag.name,
+        dateString: split[1],
+        number: parseInt(split[2])
       }
-    )
+    })
 
   const prevTagData = relevantTags.reduce(
     (mostRecent: TagData | null, next) => {

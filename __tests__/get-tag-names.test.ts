@@ -28,11 +28,18 @@ function setupTagList(tags?: string[]): jest.Mock {
     const tagObjects = tags.map(x => ({
       name: x
     })) as TagResult[]
-    listTags.mockResolvedValue({
-      status: 200,
-      headers: {},
-      url: '?',
-      data: tagObjects
+
+    listTags.mockImplementation(async opts => {
+      const {page = 0, per_page} = opts as any
+      expect(per_page).toBe(100)
+      const offset = page * per_page
+      const data = tagObjects.slice(offset, offset + per_page)
+      return {
+        status: 200,
+        headers: {},
+        url: '',
+        data
+      }
     })
   }
 
@@ -132,5 +139,43 @@ it('comes up with the correct tag name if tags come back from the API out of ord
   expect(result).toEqual({
     prevTag: 'sandbox-20210715-03',
     nextTag: 'sandbox-20210715-04'
+  })
+})
+
+it('reads a paginated list', async () => {
+  const tagList = []
+  for (let i = 0; i < 50; i++) {
+    tagList.push(`prod-20220407-${(i + 1).toString().padStart(0)}`)
+  }
+  for (let i = 0; i < 50; i++) {
+    tagList.push(`prod-20220408-${(i + 1).toString().padStart(0)}`)
+  }
+  for (let i = 0; i < 50; i++) {
+    tagList.push(`sandbox-20220407-${(i + 1).toString().padStart(0)}`)
+  }
+  for (let i = 0; i < 50; i++) {
+    tagList.push(`sandbox-20220408-${(i + 1).toString().padStart(0)}`)
+  }
+  setupTagList(tagList)
+
+  const sandboxResult = await getTagNames({
+    githubToken: 'GITHUB_TOKEN',
+    repository: 'my/repo',
+    environment: 'sandbox',
+    currentDate: new Date('2022-07-15T15:13:04.754Z')
+  })
+  expect(sandboxResult).toEqual({
+    prevTag: 'sandbox-20220408-50',
+    nextTag: 'sandbox-20220715-01'
+  })
+  const prodResult = await getTagNames({
+    githubToken: 'GITHUB_TOKEN',
+    repository: 'my/repo',
+    environment: 'prod',
+    currentDate: new Date('2022-07-15T15:13:04.754Z')
+  })
+  expect(prodResult).toEqual({
+    prevTag: 'prod-20220408-50',
+    nextTag: 'prod-20220715-01'
   })
 })
