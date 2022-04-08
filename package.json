@@ -1,6 +1,6 @@
 {
   "name": "volusion-tag-and-release",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "description": "Creates a GitHub release with a date-based name and a list of commits since the previous release",
   "main": "lib/main.js",
