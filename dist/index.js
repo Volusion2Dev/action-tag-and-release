@@ -91,13 +91,24 @@ function getTagNames({ githubToken, repository, environment, currentDate = new D
         const [repoOwner, repoName] = repository.split('/');
         const octokit = github.getOctokit(githubToken);
         const currentDateString = (0, date_fns_1.format)(currentDate, 'yyyyMMdd');
-        const tags = (yield octokit.rest.repos.listTags({
-            owner: repoOwner,
-            repo: repoName,
-            per_page: 100
-        })).data;
+        const tags = [];
+        let pagesRemaining = true;
+        let page = 0;
+        while (pagesRemaining) {
+            const { data } = yield octokit.rest.repos.listTags({
+                owner: repoOwner,
+                repo: repoName,
+                per_page: 100,
+                page
+            });
+            tags.push(...data);
+            page += 1;
+            if (data.length < 100) {
+                pagesRemaining = false;
+            }
+        }
         const relevantTags = tags
-            .filter(it => it.name.startsWith(`${environment}`))
+            .filter(it => it.name.startsWith(`${environment}-`))
             .map((tag) => {
             const split = tag.name.split('-');
             return {
